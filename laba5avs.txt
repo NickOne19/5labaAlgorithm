@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    vector<pair<int, int>> v;
+
+    // Функция f является компаратором сортировки. Пары сортируются по убыванию разности между способностями grunt и headhunter.
+    auto f = [](pair<int, int> a, pair<int, int> b) {
+        return a.first - a.second > b.first - b.second;
+    };
+
+    int n, g, h;
+    int a, b;
+
+    // Основная часть программы. Читаем входные данные.
+    cin >> n >> g >> h;
+    for (int i = 0; i < n; i++) {
+        cin >> a >> b;
+        v.push_back(make_pair(a, b));
+    }
+
+    // Если g + h > n, то армию создать невозможно.
+    if (g + h > n) {
+        cout << "-1" << endl;
+        return 0;
+    }
+
+    // Сортируем пары способностей орков.
+    sort(v.begin(), v.end(), f);
+
+    // В переменной res подсчитываем максимальную силу боеспособной армии.
+    int res = 0;
+
+    // Первые g орков делаем grunt.
+    for (int i = 0; i < g; i++) {
+        res += v[i].first;
+    }
+
+    // Последние h орков делаем headhunter.
+    for (int i = n - h; i < n; i++) {
+        res += v[i].second;
+    }
+
+    // Остальным оркам назначаем ту специальность, способность по которой у них больше.
+    for (int i = g; i < n - h; i++) {
+        res += max(v[i].first, v[i].second);
+    }
+
+    // Выводим максимальную силу боеспособной армии.
+    cout << res << endl;
+
+    return 0;
+}
